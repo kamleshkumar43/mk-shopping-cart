@@ -98,6 +98,66 @@ The discount is optional; a cart can have no discount. The first version allows 
 
 Taxes, shipping costs, and currency rules will need to be decided before the final total can include them. More advanced discount rules, such as combining codes or limiting uses per customer, are not defined yet.
 
+## Proposed project structure
+
+The following is a suggested layout for implementing the application. These files and folders have not been created yet.
+
+```text
+mk-shopping-cart/
+|-- pyproject.toml
+|-- README.md
+|-- howToContribute.md
+|-- src/
+|   `-- mk_shopping_cart/
+|       |-- __init__.py
+|       |-- cli.py
+|       |-- product.py
+|       |-- product_catalog.py
+|       |-- cart_item.py
+|       |-- discount.py
+|       |-- discount_catalog.py
+|       |-- cart.py
+|       |-- customer.py
+|       |-- order_item.py
+|       `-- order.py
+`-- tests/
+	|-- test_product.py
+	|-- test_product_catalog.py
+	|-- test_cart.py
+	|-- test_discount.py
+	`-- test_order.py
+```
+
+### Application files
+
+- `src/mk_shopping_cart/__init__.py`: marks this folder as a Python package and exposes the `main()` function from `cli.py`. The `main()` export matches the command configured in `pyproject.toml`.
+- `src/mk_shopping_cart/cli.py`: contains `main()` and handles the simple text-based interaction with the shopper. It connects the other classes but should leave product, cart, discount, and order rules to those classes.
+- `src/mk_shopping_cart/product.py`: defines the `Product` class and validates product details such as name and price.
+- `src/mk_shopping_cart/product_catalog.py`: defines `ProductCatalog`, which stores products and supports listing them or finding one by ID.
+- `src/mk_shopping_cart/cart_item.py`: defines `CartItem`, which pairs one product with a quantity and calculates that line's total.
+- `src/mk_shopping_cart/discount.py`: defines `Discount`, which checks promotion rules and calculates percentage or fixed-amount savings.
+- `src/mk_shopping_cart/discount_catalog.py`: defines `DiscountCatalog`, which finds a discount from the code entered by the shopper.
+- `src/mk_shopping_cart/cart.py`: defines `Cart`, which adds and removes items, changes quantities, calculates totals, applies a discount, and starts checkout.
+- `src/mk_shopping_cart/customer.py`: defines `Customer` and gives each customer their own cart.
+- `src/mk_shopping_cart/order_item.py`: defines `OrderItem`, which saves the product name, price, and quantity used when an order is placed.
+- `src/mk_shopping_cart/order.py`: defines `Order`, which creates and displays a saved record of a completed checkout.
+
+### Test files
+
+Tests are small checks that confirm the classes behave as expected. Keep them separate from the application code.
+
+- `tests/test_product.py`: checks product details and price validation.
+- `tests/test_product_catalog.py`: checks adding, listing, and finding products.
+- `tests/test_cart.py`: checks adding products, quantities, removals, and cart totals.
+- `tests/test_discount.py`: checks discount codes, eligibility, and savings limits.
+- `tests/test_order.py`: checks checkout, saved prices, and order totals.
+
+### Project and guide files
+
+- `pyproject.toml`: stores package information, the Python version requirement, dependencies, and the `mk-shopping-cart` command. Its configured command calls `mk_shopping_cart:main`, so `__init__.py` must expose `main()`.
+- `README.md`: explains what the shopping cart is intended to do, how its objects relate, and the proposed source layout.
+- `howToContribute.md`: gives new contributors a step-by-step explanation of classes, methods, and how to build the project.
+
 ## Project status
 
 The repository currently contains package metadata and this README, but no shopping-cart implementation or tests. The command-line entry point is declared in the project metadata; it will be usable once the corresponding application package is implemented.
